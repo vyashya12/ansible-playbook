@@ -1,4 +1,4 @@
-- name: Create hello.txt with Hello World
+- name: Create hello.txt and output Ubuntu version
   hosts: myhosts
   become: True
 
@@ -6,5 +6,13 @@
   - name: Create hello.txt and write Hello World
     copy:
       content: "Hello, World!"
-      dest: /home/wysetimepcc/wyse-edge/setup/hello.txt
+      dest: /path/to/your/hello.txt
       mode: '0644'
+
+  - name: Get Ubuntu version
+    command: lsb_release -d
+    register: ubuntu_version_output
+
+  - name: Display Ubuntu version
+    debug:
+      var: ubuntu_version_output.stdout
