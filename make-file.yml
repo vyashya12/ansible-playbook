@@ -6,7 +6,7 @@
   - name: Create hello.txt and write Hello World
     copy:
       content: "Hello, World!"
-      dest: /path/to/your/hello.txt
+      dest: /home/wysetimepcc/wyse-edge/setup/hello.txt
       mode: '0644'
 
   - name: Get Ubuntu version
