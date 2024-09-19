@@ -8,12 +8,12 @@
       name: httpd
       state: present
 
-  - name: Copy Index File
-    copy:
-      src: /home/ec2-user/src/httpd.conf
-      dest: /var/www/html/index.html
-      mode: 0644
-      backup: yes
+  # - name: Copy Index File
+  #   copy:
+  #     src: /home/ec2-user/src/httpd.conf
+  #     dest: /var/www/html/index.html
+  #     mode: 0644
+  #     backup: yes
 
   - name: Start httpd service
     service:
