@@ -6,7 +6,7 @@
   - name: Create hello.txt and write Hello World
     copy:
       content: "Hello, World!"
-      dest: /home/wysetimepcc/wyse-edge/setup/hello.txt
+      dest: /home/wysetimepcc/wyse-edge/setup/ansible/hello.txt
       state: touch
 
   - name: Get Ubuntu version
