@@ -7,7 +7,7 @@
     copy:
       content: "Hello, World!"
       dest: /home/wysetimepcc/wyse-edge/setup/hello.txt
-      mode: '0644'
+      state: touch
 
   - name: Get Ubuntu version
     command: lsb_release -d
