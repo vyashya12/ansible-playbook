@@ -3,51 +3,17 @@
   become: True
 
   tasks:
-    - name: Check current user
-      command: whoami
-      register: whoami_output
+  - name: Create hello.txt and write Hello World
+    copy:
+      content: "Hello, World!"
+      dest: /home/wysetimepcc/wyse-edge/setup/ansible/hello.txt
+      state: touch
+      mode: '0644'
 
-    - name: Display current user
-      debug:
-        var: whoami_output.stdout
+  - name: Get Ubuntu version
+    command: lsb_release -d
+    register: ubuntu_version_output
 
-    - name: Ensure lsb-release is installed
-      apt:
-        name: lsb-release
-        state: present
-        update_cache: yes
-      retries: 5
-      delay: 10
-      register: apt_result
-      until: apt_result is succeeded
-
-    - name: Get Ubuntu version
-      command: lsb_release -d
-      register: ubuntu_version_output
-
-    - name: Set OS version message for Ubuntu 24.04
-      set_fact:
-        os_version_message: "OS version is Ubuntu 24.04"
-      when: "'24.04' in ubuntu_version_output.stdout"
-
-    - name: Set OS version message for Ubuntu 22.04
-      set_fact:
-        os_version_message: "OS version is Ubuntu 22.04"
-      when: "'22.04' in ubuntu_version_output.stdout"
-
-    - name: Set default OS version message
-      set_fact:
-        os_version_message: "OS version is not explicitly handled"
-      when:
-        - "'24.04' not in ubuntu_version_output.stdout"
-        - "'22.04' not in ubuntu_version_output.stdout"
-
-    - name: Create hello.txt with OS version
-      copy:
-        content: "{{ os_version_message }}"
-        dest: /home/wysetimepcc/wyse-edge/setup/ansible/hello.txt
-        mode: '0644'
-
-    - name: Display Ubuntu version
-      debug:
-        var: ubuntu_version_output.stdout
+  - name: Display Ubuntu version
+    debug:
+      var: ubuntu_version_output.stdout
