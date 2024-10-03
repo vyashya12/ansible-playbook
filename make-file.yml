@@ -1,12 +1,25 @@
 - name: Create hello.txt and output Ubuntu version
   hosts: myhosts
-  become: true
+  become: True
+
   tasks:
+    - name: Check current user
+      command: whoami
+      register: whoami_output
+
+    - name: Display current user
+      debug:
+        var: whoami_output.stdout
+
     - name: Ensure lsb-release is installed
       apt:
         name: lsb-release
         state: present
         update_cache: yes
+      retries: 5
+      delay: 10
+      register: apt_result
+      until: apt_result is succeeded
 
     - name: Get Ubuntu version
       command: lsb_release -d
