@@ -6,7 +6,7 @@
     - name: Create hello.txt with content
       copy:
         content: "Hello, World!\n"
-        dest: "/home/wysetimepcc/wyse-edge/setup/ansible/hello.txt"
+        dest: "/home/wysetimepcc/wyse-edge/setup/hello.txt"
         mode: '0644'
 
     - name: Confirm file creation
