@@ -1,49 +1,39 @@
+---
 - name: Create hello.txt with OS version information
   hosts: myhosts
-  become: True
+  become: true  # Ensure tasks run with elevated privileges if necessary
+
+  vars:
+    target_directory: "/home/wysetimepcc/wyse-edge/setup/ansible"
+    target_file: "{{ target_directory }}/hello.txt"
+    default_message: "OS version is not explicitly handled"
 
   tasks:
-    - name: Ensure lsb-release is installed
-      apt:
-        name: lsb-release
-        state: present
-        update_cache: yes
-      become: True
+    - name: Ensure target directory exists
+      file:
+        path: "{{ target_directory }}"
+        state: directory
+        mode: '0755'
 
-    - name: Get Ubuntu version
-      command: lsb_release -d
-      register: ubuntu_version_output
-
-    - name: Set OS version message for Ubuntu 24.04
+    - name: Set OS version message based on Ansible facts
       set_fact:
-        os_version_message: "OS version is Ubuntu 24.04"
-      when: "'24.04' in ubuntu_version_output.stdout"
-
-    - name: Set OS version message for Ubuntu 22.04
-      set_fact:
-        os_version_message: "OS version is Ubuntu 22.04"
-      when: "'22.04' in ubuntu_version_output.stdout"
-
-    - name: Set OS version message for Ubuntu 20.04
-      set_fact:
-        os_version_message: "OS version is Ubuntu 20.04"
-      when: "'20.04' in ubuntu_version_output.stdout"
-
-    - name: Set default OS version message
-      set_fact:
-        os_version_message: "OS version is not explicitly handled"
-      when:
-        - "'24.04' not in ubuntu_version_output.stdout"
-        - "'22.04' not in ubuntu_version_output.stdout"
-        - "'20.04' not in ubuntu_version_output.stdout"
+        os_version_message: >-
+          {% if ansible_distribution_version == "24.04" %}
+            OS version is Ubuntu 24.04
+          {% elif ansible_distribution_version == "22.04" %}
+            OS version is Ubuntu 22.04
+          {% elif ansible_distribution_version == "20.04" %}
+            OS version is Ubuntu 20.04
+          {% else %}
+            {{ default_message }}
+          {% endif %}
 
     - name: Create hello.txt with OS version message
       copy:
         content: "{{ os_version_message }}"
-        dest: /home/wysetimepcc/wyse-edge/setup/ansible/hello.txt
+        dest: "{{ target_file }}"
         mode: '0644'
-      when: os_version_message is defined
 
-    - name: Display Ubuntu version
+    - name: Display OS version message
       debug:
-        var: ubuntu_version_output.stdout
+        msg: "{{ os_version_message }}"
