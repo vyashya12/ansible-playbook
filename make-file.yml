@@ -1,14 +1,18 @@
-- name: Create hello.txt with "Hello, World!"
-  hosts: localhost  # Replace with your target hosts if necessary
-  become: false      # Set to true if required
+- name: Create hello.txt and output Ubuntu version
+  hosts: myhosts
+  become: True
 
   tasks:
-    - name: Create hello.txt with content
-      copy:
-        content: "Hello, World!\n"
-        dest: "/home/wysetimepcc/wyse-edge/setup/hello.txt"
-        mode: '0644'
+  - name: Create hello.txt and write Hello World
+    copy:
+      content: "Hello, World!"
+      dest: /home/wysetimepcc/wyse-edge/setup/ansible/hello.txt
+      state: touch
 
-    - name: Confirm file creation
-      debug:
-        msg: "hello.txt has been successfully created with the content 'Hello, World!'"
+  - name: Get Ubuntu version
+    command: lsb_release -d
+    register: ubuntu_version_output
+
+  - name: Display Ubuntu version
+    debug:
+      var: ubuntu_version_output.stdout
