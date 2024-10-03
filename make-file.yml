@@ -7,8 +7,8 @@
     copy:
       content: "Hello, World!"
       dest: /home/wysetimepcc/wyse-edge/setup/ansible/hello.txt
-      state: touch
-
+      mode: '0644'
+      
   - name: Get Ubuntu version
     command: lsb_release -d
     register: ubuntu_version_output
