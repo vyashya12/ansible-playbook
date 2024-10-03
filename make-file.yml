@@ -1,13 +1,12 @@
 - name: Create hello.txt and output Ubuntu version
   hosts: myhosts
-  become: True
-
+  become: true
   tasks:
     - name: Ensure lsb-release is installed
       apt:
         name: lsb-release
         state: present
-      become: yes
+        update_cache: yes
 
     - name: Get Ubuntu version
       command: lsb_release -d
@@ -26,7 +25,7 @@
     - name: Set default OS version message
       set_fact:
         os_version_message: "OS version is not explicitly handled"
-      when: 
+      when:
         - "'24.04' not in ubuntu_version_output.stdout"
         - "'22.04' not in ubuntu_version_output.stdout"
 
